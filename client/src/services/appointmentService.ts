@@ -1,9 +1,9 @@
-import api from 'axios'
+import api from './api' // ✅ use your configured Axios instance
 import type { Appointment } from '@/types'
 
 const getAppointments = async (): Promise<Appointment[]> => {
   const { data } = await api.get<Appointment[]>('/appointments')
-  return data
+  return Array.isArray(data) ? data : [] // ✅ ensure it's an array
 }
 
 const getAppointmentById = async (id: string): Promise<Appointment> => {
