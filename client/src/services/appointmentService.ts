@@ -1,4 +1,4 @@
-import api from './api'
+import { api } from './authService'
 import type { Appointment } from '@/types'
 
 const getAppointments = async (): Promise<Appointment[]> => {
@@ -35,5 +35,5 @@ export default {
   getAppointmentById,
   createAppointment,
   updateAppointment,
-  cancelAppointment
+  cancelAppointment,
 }
