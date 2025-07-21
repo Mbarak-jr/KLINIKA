@@ -1,0 +1,32 @@
+
+# 🔒 Root-level ignores
+.env
+node_modules/
+dist/
+build/
+.vscode/
+.DS_Store
+
+# 🧪 Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# ⛔ OS-generated
+Thumbs.db
+
+# ⚙️ Client (React + Vite + TypeScript)
+client/node_modules/
+client/dist/
+client/.env
+client/.DS_Store
+
+# ⚙️ Server (Express.js)
+server/node_modules/
+server/.env
+server/.DS_Store
+
+# 🌐 Production builds (if any)
+client/build/
