@@ -11,7 +11,7 @@ const DoctorCard = ({ doctor, onEdit, onDelete }: DoctorCardProps) => {
   return (
     <div className="card bg-base-100 shadow-md">
       <div className="card-body">
-        <h3 className="card-title">{doctor.name}</h3>
+        <h3 className="card-title">{doctor.user.name}</h3>
         <p>Specialization: {doctor.specialization}</p>
         <p>Qualifications: {doctor.qualifications.join(', ')}</p>
         <div className="card-actions justify-end">

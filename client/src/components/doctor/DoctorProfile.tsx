@@ -8,7 +8,7 @@ const DoctorProfile = ({ doctor }: DoctorProfileProps) => {
   return (
     <div className="card bg-base-100 shadow-lg">
       <div className="card-body">
-        <h2 className="card-title text-2xl">{doctor.name}</h2>
+        <h2 className="card-title text-2xl">{doctor.user.name}</h2>
         <div className="space-y-4">
           <div>
             <h3 className="font-bold">Specialization</h3>
@@ -23,16 +23,16 @@ const DoctorProfile = ({ doctor }: DoctorProfileProps) => {
             </ul>
           </div>
           <div>
-            <h3 className="font-bold">Available Slots</h3>
-            <div className="flex flex-wrap gap-2">
-              {doctor.availableSlots.map((slot, index) => (
-                <span key={index} className="badge badge-primary">
-                  {slot}
-                </span>
+            <h3 className="font-bold">Schedule</h3>
+            <ul className="list-disc pl-5">
+              {Object.entries(doctor.schedule).map(([day, times], index) => (
+                <li key={index}>
+                  <strong>{day}:</strong> {times.join(', ')}
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
-          {typeof doctor.clinic !== 'string' && (
+          {typeof doctor.clinic !== 'string' && doctor.clinic && (
             <div>
               <h3 className="font-bold">Clinic</h3>
               <p>{doctor.clinic.name}</p>
