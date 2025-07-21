@@ -2,6 +2,9 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
+const helmet = require('helmet');
+const compression = require('compression');
+const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middlewares/errorHandler');
 
@@ -14,7 +17,22 @@ connectDB();
 // Initialize Express
 const app = express();
 
-// Middleware
+// Security Middleware
+app.use(helmet());
+
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(limiter);
+
+// Compression (gzip)
+app.use(compression());
+
+// JSON and URL-encoded middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -22,7 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 if (process.env.NODE_ENV === 'development') {
   app.use(cors({
     origin: process.env.CLIENT_URL || 'http://localhost:3000',
-    credentials: true
+    credentials: true,
   }));
 } else {
   app.use(cors());
@@ -38,16 +56,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/clinics', clinicRoutes);
 app.use('/api/doctors', doctorRoutes);
-
-// Serve static assets if in production
-if (process.env.NODE_ENV === 'production') {
-  const __dirname = path.resolve(); // Ensure __dirname is available
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
-  });
-}
 
 // Error Handler Middleware
 app.use(errorHandler);
