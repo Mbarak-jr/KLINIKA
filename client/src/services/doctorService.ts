@@ -11,7 +11,6 @@ const getDoctorById = async (id: string): Promise<Doctor> => {
   return data
 }
 
-// ✅ NEW: Fetch doctor by user ID
 const getDoctorByUserId = async (userId: string): Promise<Doctor> => {
   const { data } = await api.get<Doctor>(`/doctors/user/${userId}`)
   return data
@@ -32,7 +31,6 @@ const updateDoctor = async (
   return data
 }
 
-// ✅ NEW: Update doctor schedule with proper type
 const updateDoctorSchedule = async (
   doctorId: string,
   schedule: ScheduleSlot[]
@@ -41,13 +39,11 @@ const updateDoctorSchedule = async (
   return data
 }
 
-const doctorService = {
+export default {
   getDoctors,
   getDoctorById,
   getDoctorByUserId,
   createDoctor,
   updateDoctor,
-  updateDoctorSchedule // ✅ Added here
+  updateDoctorSchedule
 }
-
-export default doctorService

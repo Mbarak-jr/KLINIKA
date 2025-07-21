@@ -1,5 +1,19 @@
-import api from './api'
+import axios from 'axios'
 import type { User, AuthResponse } from '@/types'
+
+// Create a base Axios instance
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+})
+
+// Automatically attach token to each request if available
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
 
 /**
  * Logs in a user and stores JWT token.
@@ -28,17 +42,9 @@ const register = async (userData: {
 
 /**
  * Gets the currently authenticated user from the backend.
- * Requires the JWT token to be stored in localStorage.
  */
 const getMe = async (): Promise<User> => {
-  const token = localStorage.getItem('token')
-  if (!token) throw new Error('No token found')
-
-  const { data } = await api.get<User>('/auth/me', {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+  const { data } = await api.get<User>('/auth/me')
   return data
 }
 
@@ -66,16 +72,14 @@ const resetPassword = async (
   await api.put(`/auth/resetpassword/${token}`, passwords)
 }
 
-/**
- * Export all functions for external use.
- */
 const authService = {
   login,
   register,
   getMe,
   logout,
   forgotPassword,
-  resetPassword
+  resetPassword,
 }
 
 export default authService
+export { api } // Exporting for use in other services
