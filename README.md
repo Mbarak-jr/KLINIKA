@@ -1,15 +1,12 @@
-# 🏥 KLINIKA – Clinic Appointment Booking System
+# 🏥 NOVAHEALTH – Clinic Appointment Booking System
 
-KLINIKA is a full-stack appointment booking system built with the **MERN stack**. It enables patients to schedule appointments with clinics or doctors, while admins and staff can manage clinics, appointments, and doctors in real time. This system is ideal for small to medium-sized healthcare providers.
+NovaHealth is a full-stack appointment booking system built with the **MERN stack**. It enables patients to schedule appointments with clinics or doctors, while admins and staff can manage clinics, appointments, and doctors in real time. This system is ideal for small to medium-sized healthcare providers.
 
 ---
 
 ## 🌐 Live Demo
 
-🚀 Frontend: [_klinika-client.onrender.com_](https://klinika-client.onrender.com)  
-🚀 Backend: [_klinika-api.onrender.com/api_](https://klinika-api.onrender.com/api)
-
-> _Note: Replace above links with actual deployments if changed._
+🚀 Frontend: [_novahealth.onrender.com_](https://novahealth.onrender.com)
 
 ---
 
@@ -23,59 +20,55 @@ Here’s a glimpse of the homepage UI:
 
 ## 📁 Project Structure
 
-klinika/
-├── client/ # Frontend (React + Vite + TypeScript)
-│ ├── components/ # Shared and page-specific components
-│ ├── pages/ # Views (auth, clinics, dashboard, etc.)
-│ ├── services/ # API service functions (e.g. axios)
-│ ├── hooks/ # Custom hooks
-│ └── ...
-│
-├── server/ # Backend (Express.js + MongoDB)
-│ ├── config/ # DB configuration
-│ ├── controllers/ # Business logic for routes
-│ ├── models/ # Mongoose models
-│ ├── routes/ # API endpoints
-│ ├── middlewares/ # Auth, error handler, etc.
-│ └── ...
-│
-├── .env # Environment variables (ignored by Git)
-├── .gitignore # Git ignored files
-├── README.md # Project documentation
-├── package.json # Optional monorepo-level tooling
+klinika/  
+├── client/ # Frontend (React + Vite + TypeScript)  
+│ ├── components/ # Shared and page-specific components  
+│ ├── pages/ # Views (auth, clinics, dashboard, etc.)  
+│ ├── services/ # API service functions (e.g. axios)  
+│ ├── hooks/ # Custom hooks  
+│ └── ...  
+│  
+├── server/ # Backend (Express.js + MongoDB)  
+│ ├── config/ # DB configuration  
+│ ├── controllers/ # Business logic for routes  
+│ ├── models/ # Mongoose models  
+│ ├── routes/ # API endpoints  
+│ ├── middlewares/ # Auth, error handler, etc.  
+│ └── ...  
+│  
+├── .env # Environment variables (ignored by Git)  
+├── .gitignore # Git ignored files  
+├── README.md # Project documentation  
+├── package.json # Optional monorepo-level tooling  
 └── klinika-homepage.png # Project screenshot
-
-yaml
-Copy
-Edit
 
 ---
 
 ## 🛠️ Features
 
-- 🔐 Secure Authentication (JWT-based: Register, Login, Reset Password)
-- 🩺 Appointment Booking by Patients
-- 📋 View and Manage Appointments
-- 🧑‍⚕️ Admin Dashboard for Managing Doctors, Clinics & Schedules
-- 📅 Calendar-based appointment management
-- 🧘 Responsive UI with TailwindCSS and TypeScript
-- 🔄 REST API with Express.js and MongoDB
+- 🔐 Secure Authentication (JWT-based: Register, Login, Reset Password)  
+- 🩺 Appointment Booking by Patients  
+- 📋 View and Manage Appointments  
+- 🧑‍⚕️ Admin Dashboard for Managing Doctors, Clinics & Schedules  
+- 📅 Calendar-based appointment management  
+- 🧘 Responsive UI with TailwindCSS and TypeScript  
+- 🔄 REST API with Express.js and MongoDB  
 
 ---
 
 ## ⚙️ Tech Stack
 
-### 🔹 Frontend
-- React + Vite + TypeScript
-- React Router DOM
-- Axios
-- TailwindCSS
+### 🔹 Frontend  
+- React + Vite + TypeScript  
+- React Router DOM  
+- Axios  
+- TailwindCSS  
 
-### 🔹 Backend
-- Node.js + Express.js
-- MongoDB + Mongoose
-- JWT Authentication
-- bcrypt, express-async-handler, dotenv
+### 🔹 Backend  
+- Node.js + Express.js  
+- MongoDB + Mongoose  
+- JWT Authentication  
+- bcrypt, express-async-handler, dotenv  
 
 ---
 
@@ -88,14 +81,12 @@ git clone https://github.com/Mbarak-jr/KLINIKA.git
 cd KLINIKA
 2. Install Dependencies
 Backend
-
 bash
 Copy
 Edit
 cd server
 npm install
 Frontend
-
 bash
 Copy
 Edit
@@ -118,20 +109,18 @@ Edit
 VITE_API_URL=http://localhost:5000/api
 4. Run the App Locally
 Start Backend
-
 bash
 Copy
 Edit
 cd server
 npm run dev
 Start Frontend
-
 bash
 Copy
 Edit
 cd client
 npm run dev
-Access the app at http://localhost:5173
+Access the app at http://localhost:3000
 
 🧪 Testing
 Backend routes can be tested using Postman or Thunder Client.
