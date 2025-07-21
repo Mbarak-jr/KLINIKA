@@ -1,4 +1,4 @@
-import { api } from './authService'
+import api from 'axios'
 import type { Appointment } from '@/types'
 
 const getAppointments = async (): Promise<Appointment[]> => {
