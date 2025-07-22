@@ -30,6 +30,7 @@ const sendTokenResponse = (res, user) => {
       email: user.email,
       role: user.role,
     },
+    token,
   });
 };
 
