@@ -1,3 +1,4 @@
+// src/pages/admin/AdminDashboard.tsx
 import { useEffect } from 'react'
 import { useClinics } from '@/hooks/useClinics'
 import { useDoctors } from '@/hooks/useDoctors'
@@ -6,18 +7,21 @@ import ClinicList from '@/components/clinic/ClinicList'
 import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
 import { useAutoLogout } from '@/hooks/useAutoLogout'
+import { useAuth } from '@/hooks/useAuth' // ✅ Import auth hook
 
 const AdminDashboard = () => {
-  const { clinics } = useClinics() // ✅ fetchClinics removed
+  const { clinics } = useClinics()
   const { doctors, fetchDoctors } = useDoctors()
+  const { isAuthenticated } = useAuth() // ✅ Get auth status
 
   // 🔐 Handle auto-logout on token expiration
   useAutoLogout()
 
   useEffect(() => {
-    // ✅ Only fetch doctors — clinics are loaded by ClinicProvider
-    fetchDoctors()
-  }, [fetchDoctors])
+    if (isAuthenticated) {
+      fetchDoctors() // ✅ Only fetch if authenticated
+    }
+  }, [fetchDoctors, isAuthenticated])
 
   return (
     <div className="bg-gray-50 h-screen overflow-hidden flex flex-col">

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import doctorService from '@/services/doctorService'
 import type { Doctor } from '@/types'
 
@@ -7,7 +7,7 @@ export const useDoctors = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchDoctors = async () => {
+  const fetchDoctors = useCallback(async () => {
     setLoading(true)
     try {
       const data = await doctorService.getDoctors()
@@ -17,9 +17,9 @@ export const useDoctors = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const getDoctor = async (id: string) => {
+  const getDoctor = useCallback(async (id: string) => {
     setLoading(true)
     try {
       const data = await doctorService.getDoctorById(id)
@@ -30,7 +30,7 @@ export const useDoctors = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   return {
     doctors,

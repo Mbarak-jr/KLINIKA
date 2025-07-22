@@ -3,16 +3,17 @@ import { useState, useEffect, useRef, type ReactNode } from 'react'
 import clinicService from '@/services/clinicService'
 import { ClinicContext } from '@/context/ClinicContext'
 import type { Clinic } from '@/types'
+import { useAuth } from '@/hooks/useAuth' // ✅ Add auth hook
 
 export const ClinicProvider = ({ children }: { children: ReactNode }) => {
+  const { isAuthenticated } = useAuth() // ✅ Get auth state
   const [clinics, setClinics] = useState<Clinic[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
   const hasFetched = useRef(false)
 
   useEffect(() => {
-    if (hasFetched.current) return
+    if (!isAuthenticated || hasFetched.current) return // ✅ Guard
 
     const loadClinics = async () => {
       hasFetched.current = true
@@ -29,7 +30,7 @@ export const ClinicProvider = ({ children }: { children: ReactNode }) => {
     }
 
     loadClinics()
-  }, [])
+  }, [isAuthenticated])
 
   const fetchClinics = async () => {
     setLoading(true)
