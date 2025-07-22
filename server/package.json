@@ -1,7 +1,7 @@
 {
-  "name": "klinika-server",
+  "name": "novahealth-server",
   "version": "1.0.0",
-  "description": "Backend for KLINIKA - Clinic Appointment Booking System",
+  "description": "Backend for NOVAHEALTH - Clinic Appointment Booking System",
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=production node server.js",
@@ -13,6 +13,7 @@
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",

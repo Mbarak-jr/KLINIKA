@@ -1,75 +1,102 @@
-import axios from 'axios'
+import api from './api'
 import type { User, AuthResponse } from '@/types'
 
-// Create a base Axios instance
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
-})
-
-// Automatically attach token to each request if available
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
-  return config
-})
-
-/**
- * Logs in a user and stores JWT token.
- */
 const login = async (
   credentials: { email: string; password: string }
 ): Promise<User> => {
-  const { data } = await api.post<AuthResponse>('/auth/login', credentials)
-  localStorage.setItem('token', data.token)
-  return data.user
+  try {
+    console.log('🔐 Attempting login...')
+    const { data } = await api.post<AuthResponse>('/auth/login', credentials, {
+      withCredentials: true,
+    })
+
+    console.log('✅ Login successful, user received')
+    return data.user
+  } catch (error) {
+    console.error('❌ Login failed:', error)
+    throw error
+  }
 }
 
-/**
- * Registers a user and stores JWT token.
- */
 const register = async (userData: {
   name: string
   email: string
   password: string
   role: 'patient' | 'doctor' | 'admin'
 }): Promise<User> => {
-  const { data } = await api.post<AuthResponse>('/auth/register', userData)
-  localStorage.setItem('token', data.token)
-  return data.user
+  try {
+    console.log('📝 Attempting registration...')
+    const { data } = await api.post<AuthResponse>('/auth/register', userData, {
+      withCredentials: true,
+    })
+
+    console.log('✅ Registration successful, user received')
+    return data.user
+  } catch (error) {
+    console.error('❌ Registration failed:', error)
+    throw error
+  }
 }
 
-/**
- * Gets the currently authenticated user from the backend.
- */
 const getMe = async (): Promise<User> => {
-  const { data } = await api.get<User>('/auth/me')
-  return data
+  try {
+    console.log('👤 Fetching current user...')
+    const { data } = await api.get<User>('/auth/me', {
+      withCredentials: true,
+    })
+
+    console.log('✅ User fetched successfully')
+    return data
+  } catch (error) {
+    console.error('❌ Failed to get current user:', error)
+    throw error
+  }
 }
 
-/**
- * Logs the user out by removing the token.
- */
-const logout = (): void => {
-  localStorage.removeItem('token')
+const logout = async (): Promise<void> => {
+  try {
+    console.log('🚪 Logging out user...')
+    await api.post('/auth/logout', {}, { withCredentials: true })
+    console.log('✅ User logged out successfully')
+  } catch (error) {
+    console.error('❌ Logout failed:', error)
+    throw error
+  }
 }
 
-/**
- * Sends a password reset email.
- */
 const forgotPassword = async (email: string): Promise<void> => {
-  await api.post('/auth/forgotpassword', { email })
+  try {
+    console.log('📧 Sending password reset email...')
+    await api.post('/auth/forgotpassword', { email })
+    console.log('✅ Password reset email sent')
+  } catch (error) {
+    console.error('❌ Failed to send password reset email:', error)
+    throw error
+  }
 }
 
-/**
- * Resets the user password using a token.
- */
 const resetPassword = async (
   token: string,
   passwords: { password: string; confirmPassword: string }
 ): Promise<void> => {
-  await api.put(`/auth/resetpassword/${token}`, passwords)
+  try {
+    console.log('🔑 Resetting password...')
+    await api.put(`/auth/resetpassword/${token}`, passwords)
+    console.log('✅ Password reset successful')
+  } catch (error) {
+    console.error('❌ Password reset failed:', error)
+    throw error
+  }
+}
+
+// Always assume authenticated status must be verified via backend when using cookies
+const isAuthenticated = async (): Promise<boolean> => {
+  try {
+    await getMe()
+    return true
+  } catch {
+    return false
+  }
 }
 
 const authService = {
@@ -79,7 +106,7 @@ const authService = {
   logout,
   forgotPassword,
   resetPassword,
+  isAuthenticated,
 }
 
 export default authService
-export { api } // Exporting for use in other services

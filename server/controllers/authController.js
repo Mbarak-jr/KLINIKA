@@ -12,6 +12,27 @@ const generateToken = (id, role) => {
   });
 };
 
+// Set token cookie
+const sendTokenResponse = (res, user) => {
+  const token = generateToken(user._id, user.role);
+
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+
+  res.json({
+    user: {
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+  });
+};
+
 // @desc    Authenticate a user
 // @route   POST /api/auth/login
 // @access  Public
@@ -21,15 +42,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email }).select('+password');
 
   if (user && (await bcrypt.compare(password, user.password))) {
-    res.json({
-      token: generateToken(user._id, user.role),
-      user: {
-        _id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
+    sendTokenResponse(res, user);
   } else {
     res.status(400);
     throw new Error('Invalid credentials');
@@ -61,19 +74,19 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    res.status(201).json({
-      token: generateToken(user._id, user.role),
-      user: {
-        _id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
+    sendTokenResponse(res, user);
   } else {
     res.status(400);
     throw new Error('Invalid user data');
   }
+});
+
+// @desc    Logout user
+// @route   POST /api/auth/logout
+// @access  Public
+const logoutUser = asyncHandler(async (req, res) => {
+  res.clearCookie('token');
+  res.status(200).json({ message: 'Logged out successfully' });
 });
 
 // @desc    Get current user
@@ -166,11 +179,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 
   await user.save();
 
-  res.status(200).json({
-    success: true,
-    message: 'Password reset successful',
-    token: generateToken(user._id, user.role),
-  });
+  sendTokenResponse(res, user);
 });
 
 // @desc    Update user details
@@ -207,16 +216,13 @@ const updatePassword = asyncHandler(async (req, res) => {
   user.password = req.body.newPassword;
   await user.save();
 
-  res.status(200).json({
-    success: true,
-    message: 'Password updated successfully',
-    token: generateToken(user._id, user.role),
-  });
+  sendTokenResponse(res, user);
 });
 
 module.exports = {
   loginUser,
   registerUser,
+  logoutUser,
   getMe,
   forgotPassword,
   resetPassword,

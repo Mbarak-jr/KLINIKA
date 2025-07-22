@@ -1,4 +1,5 @@
-import { useState, useEffect, type ReactNode } from 'react'
+// src/context/clinic/ClinicProvider.tsx
+import { useState, useEffect, useRef, type ReactNode } from 'react'
 import clinicService from '@/services/clinicService'
 import { ClinicContext } from '@/context/ClinicContext'
 import type { Clinic } from '@/types'
@@ -8,14 +9,19 @@ export const ClinicProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Load clinics on mount
+  const hasFetched = useRef(false)
+
   useEffect(() => {
+    if (hasFetched.current) return
+
     const loadClinics = async () => {
+      hasFetched.current = true
+      setLoading(true)
       try {
-        setLoading(true)
         const data = await clinicService.getClinics()
         setClinics(data)
-      } catch {
+      } catch (err) {
+        console.error('❌ Failed to fetch clinics:', err)
         setError('Failed to fetch clinics')
       } finally {
         setLoading(false)
@@ -30,7 +36,8 @@ export const ClinicProvider = ({ children }: { children: ReactNode }) => {
     try {
       const data = await clinicService.getClinics()
       setClinics(data)
-    } catch {
+    } catch (err) {
+      console.error('❌ Failed to fetch clinics:', err)
       setError('Failed to fetch clinics')
     } finally {
       setLoading(false)
@@ -44,7 +51,8 @@ export const ClinicProvider = ({ children }: { children: ReactNode }) => {
     try {
       const newClinic = await clinicService.createClinic(clinicData)
       setClinics(prev => [...prev, newClinic])
-    } catch {
+    } catch (err) {
+      console.error('❌ Failed to create clinic:', err)
       setError('Failed to create clinic')
     } finally {
       setLoading(false)
@@ -55,10 +63,9 @@ export const ClinicProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true)
     try {
       const updatedClinic = await clinicService.updateClinic(id, updateData)
-      setClinics(prev =>
-        prev.map(c => (c._id === id ? updatedClinic : c))
-      )
-    } catch {
+      setClinics(prev => prev.map(c => (c._id === id ? updatedClinic : c)))
+    } catch (err) {
+      console.error('❌ Failed to update clinic:', err)
       setError('Failed to update clinic')
     } finally {
       setLoading(false)
@@ -70,7 +77,8 @@ export const ClinicProvider = ({ children }: { children: ReactNode }) => {
     try {
       await clinicService.deleteClinic(id)
       setClinics(prev => prev.filter(c => c._id !== id))
-    } catch {
+    } catch (err) {
+      console.error('❌ Failed to delete clinic:', err)
       setError('Failed to delete clinic')
     } finally {
       setLoading(false)
@@ -86,7 +94,7 @@ export const ClinicProvider = ({ children }: { children: ReactNode }) => {
         fetchClinics,
         createClinic,
         updateClinic,
-        deleteClinic
+        deleteClinic,
       }}
     >
       {children}

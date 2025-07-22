@@ -1,11 +1,13 @@
-
 import { useState, useCallback, useEffect } from 'react'
 import { AppointmentContext, type AppointmentContextType } from '@/context/AppointmentContext'
 import type { Appointment } from '@/types'
 import type { ReactNode } from 'react'
 import appointmentService from '@/services/appointmentService'
+import { useAuth } from '@/hooks/useAuth' // ✅ Import AuthContext
 
 export const AppointmentProvider = ({ children }: { children: ReactNode }) => {
+  const { isAuthenticated } = useAuth() // ✅ Access auth status
+
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -73,9 +75,12 @@ export const AppointmentProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [])
 
+  // ✅ Only fetch appointments if authenticated
   useEffect(() => {
-    fetchAppointments()
-  }, [fetchAppointments])
+    if (isAuthenticated) {
+      fetchAppointments()
+    }
+  }, [fetchAppointments, isAuthenticated])
 
   const contextValue: AppointmentContextType = {
     appointments,

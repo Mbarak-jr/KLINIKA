@@ -5,6 +5,7 @@ export interface AuthContextType {
   user: User | null
   loading: boolean
   error: string | null
+  isAuthenticated: boolean // ✅ Added this line
   login: (credentials: { email: string; password: string }) => Promise<void>
   register: (userData: {
     name: string
